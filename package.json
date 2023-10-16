@@ -16,6 +16,8 @@
     "semi": false
   },
   "dependencies": {
+    "@clerk/nextjs": "^4.25.4",
+    "@clerk/themes": "^1.7.7",
     "@planetscale/database": "^1.11.0",
     "dotenv": "^16.3.1",
     "drizzle-orm": "^0.28.6",

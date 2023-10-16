@@ -1,7 +1,9 @@
-import { db } from '@/db/client'
+import { UserButton } from '@clerk/nextjs'
 
-export default async function Home() {
-  const result = await db.query.user.findMany()
-  console.log(result)
-  return <div>{process.env.TEST}</div>
+export default function Home() {
+  return (
+    <div>
+      <UserButton afterSignOutUrl="/" />
+    </div>
+  )
 }

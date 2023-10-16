@@ -18,7 +18,7 @@ to run `pnpm run dev`
 
 ### Steps
 
-1. install drizzle orm
+1. (db setup) install drizzle orm
 
 ```shell
 pnpm add drizzle-orm @planetscale/database
@@ -28,7 +28,7 @@ pnpm add -D mysql2
 
 2. create a planetscale account and create a dev branch
 
-3. add envariables for planetscale
+3. add env vars for planetscale
 
 ```
 DATABASE_HOST=
@@ -67,4 +67,62 @@ const connection = connect({
 })
 
 export const db = drizzle(connection, { schema }) // don't forget to add schema
+```
+
+6. (auth setup) install clerk
+
+```shell
+pnpm add @clerk/nextjs
+```
+
+7. add env vars for clerk
+
+```
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
+```
+
+8. wrap your whole app in `<ClerkProvider>`
+9. add middleware file, this will protect all routes
+
+```typescript
+import { authMiddleware } from '@clerk/nextjs'
+
+export default authMiddleware({})
+
+export const config = {
+  matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
+}
+```
+
+10. add signup page in `app/sign-up/[[...sign-up]]/page.tsx`
+
+```typescript
+import { SignUp } from '@clerk/nextjs'
+
+export default function Page() {
+  return <SignUp />
+}
+```
+
+11. add signin page in `app/sign-in/[[...sign-in]]/page.tsx`
+
+```typescript
+import { SignIn } from '@clerk/nextjs'
+
+export default function Page() {
+  return <SignIn />
+}
+```
+
+12. for clerk dark theme install `pnpm add @clerk/themes` then:
+
+```typescript
+import { dark } from '@clerk/themes'
+// ...
+<ClerkProvider appearance={{ baseTheme: dark}}>
 ```
