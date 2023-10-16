@@ -18,7 +18,7 @@ to run `pnpm run dev`
 
 ### Steps
 
-1. planetscale and drizzle orm
+1. install drizzle orm
 
 ```shell
 pnpm add drizzle-orm @planetscale/database
@@ -26,7 +26,9 @@ pnpm add -D drizzle-kit
 pnpm add -D mysql2
 ```
 
-2. add envariables for planetscale
+2. create a planetscale account and create a dev branch
+
+3. add envariables for planetscale
 
 ```
 DATABASE_HOST=
@@ -34,7 +36,7 @@ DATABASE_USERNAME=
 DATABASE_PASSWORD=
 ```
 
-3. add config file for drizzle
+4. add config file for drizzle
 
 ```typescript
 import dotenv from 'dotenv'
@@ -49,4 +51,20 @@ export default {
     connectionString: `mysql://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}@${process.env.DATABASE_HOST}/waypok-poc-v2?ssl={"rejectUnauthorized":true}`,
   },
 } satisfies Config
+```
+
+5. create a db client with drizzle and planetscale
+
+```typescript
+import * as schema from '@/schema/drizzle'
+import { connect } from '@planetscale/database'
+import { drizzle } from 'drizzle-orm/planetscale-serverless'
+
+const connection = connect({
+  host: process.env.DATABASE_HOST,
+  username: process.env.DATABASE_USERNAME,
+  password: process.env.DATABASE_PASSWORD,
+})
+
+export const db = drizzle(connection, { schema }) // don't forget to add schema
 ```
