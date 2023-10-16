@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+to run `pnpm run dev`
 
-## Getting Started
+| Name         | Description                                                                              | Docs Link                                                  |
+| ------------ | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| Next.js 13   | The latest version of the popular React framework for building web applications.         | https://nextjs.org/docs/getting-started                    |
+| Vercel       | A cloud platform for static sites and serverless functions.                              | https://vercel.com/docs                                    |
+| trpc         | A TypeScript-first RPC framework for building scalable APIs.                             | https://trpc.io/docs/                                      |
+| zod          | A TypeScript-first schema validation library.                                            | https://github.com/vriad/zod                               |
+| react-form   | A lightweight and extensible library for building forms in React.                        | https://react-hook-form.com/get-started                    |
+| Radix UI     | A collection of accessible and reusable components for building modern interfaces.       | https://www.radix-ui.com/docs/getting-started/introduction |
+| Shadcn       | A collection of beautiful and customizable CSS shadows.                                  | https://shadcn.com/                                        |
+| CVA          | A library for building complex animations and interactions in React.                     | https://cvarose.com/docs/                                  |
+| Lucide React | A library of beautiful and customizable SVG icons for React.                             | https://lucide.dev/docs/                                   |
+| Tailwind CSS | A utility-first CSS framework for rapidly building custom designs.                       | https://tailwindcss.com/docs                               |
+| Drizzle      | A collection of front-end libraries for building decentralized applications on Ethereum. | https://www.trufflesuite.com/docs/drizzle                  |
+| PlanetScale  | A cloud-native database platform for scaling MySQL.                                      | https://docs.planetscale.com/                              |
+| Clerk        | A secure and easy-to-use authentication and user management platform.                    | https://docs.clerk.dev/                                    |
 
-First, run the development server:
+### Steps
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+1. planetscale and drizzle orm
+
+```shell
+pnpm add drizzle-orm @planetscale/database
+pnpm add -D drizzle-kit
+pnpm add -D mysql2
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. add envariables for planetscale
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+DATABASE_HOST=
+DATABASE_USERNAME=
+DATABASE_PASSWORD=
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+3. add config file for drizzle
 
-## Learn More
+```typescript
+import dotenv from 'dotenv'
+import type { Config } from 'drizzle-kit'
+dotenv.config()
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+export default {
+  schema: './schema/drizzle.ts', // change to correct drizzle schema path
+  out: './drizzle',
+  driver: 'mysql2',
+  dbCredentials: {
+    connectionString: `mysql://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}@${process.env.DATABASE_HOST}/waypok-poc-v2?ssl={"rejectUnauthorized":true}`,
+  },
+} satisfies Config
+```
