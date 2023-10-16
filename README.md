@@ -126,3 +126,7 @@ import { dark } from '@clerk/themes'
 // ...
 <ClerkProvider appearance={{ baseTheme: dark}}>
 ```
+
+13. (shadcn & theme) follow [shadcn nextjs guide](https://ui.shadcn.com/docs/installation/next)
+14. setup dark theme [shadcn nextjs theming](https://ui.shadcn.com/docs/dark-mode/next)
+15. install icons `pnpm install lucide-react`
