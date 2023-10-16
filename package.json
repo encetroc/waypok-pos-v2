@@ -13,8 +13,9 @@
     "c:add": "shadcn-ui add "
   },
   "prettier": {
+    "semi": false,
     "singleQuote": true,
-    "semi": false
+    "absoluteImports": true
   },
   "dependencies": {
     "@clerk/nextjs": "^4.25.4",

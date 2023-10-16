@@ -18,6 +18,7 @@ to run `pnpm run dev`
 
 ### Steps
 
+0. change tcconfig from es5 to es2015
 1. (db setup) install drizzle orm
 
 ```shell
@@ -26,7 +27,7 @@ pnpm add -D drizzle-kit
 pnpm add -D mysql2
 ```
 
-2. create a planetscale account and create a dev branch
+2. (db setup) create a planetscale account and create a dev branch
 
 3. add env vars for planetscale
 
@@ -92,7 +93,9 @@ NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
 ```typescript
 import { authMiddleware } from '@clerk/nextjs'
 
-export default authMiddleware({})
+export default authMiddleware({
+  publicRoutes: ['/'],
+})
 
 export const config = {
   matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
@@ -130,3 +133,131 @@ import { dark } from '@clerk/themes'
 13. (shadcn & theme) follow [shadcn nextjs guide](https://ui.shadcn.com/docs/installation/next)
 14. setup dark theme [shadcn nextjs theming](https://ui.shadcn.com/docs/dark-mode/next)
 15. install icons `pnpm install lucide-react`
+16. (trpc) install packages `pnpm add @trpc/client @trpc/react-query @trpc/server @tanstack/react-query superjson`
+17. create aa dynamic api route
+
+```typescript
+import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
+
+import { appRouter } from '@/server'
+import { createTRPCContext } from '@/server/trpc'
+
+const handler = (req: Request) =>
+  fetchRequestHandler({
+    endpoint: '/api/trpc',
+    req,
+    router: appRouter,
+    createContext: createTRPCContext,
+  })
+
+export { handler as GET, handler as POST }
+```
+
+18. add the following files to server folder
+
+```typescript
+// client.ts
+import { createTRPCReact } from '@trpc/react-query'
+
+import { type AppRouter } from '@/server'
+
+export const trpc = createTRPCReact<AppRouter>({})
+```
+
+```typescript
+// index.ts
+import { protectedProcedure, publicProcedure, router } from '@/server/trpc'
+import { inferRouterOutputs } from '@trpc/server'
+
+export const appRouter = router({
+  public: publicProcedure.query(() => 'this is a public route'),
+  protected: protectedProcedure.query(() => 'this is a protected route'),
+})
+
+type RouterOutput = inferRouterOutputs<AppRouter>
+
+export type AppRouter = typeof appRouter
+```
+
+```typescript
+// trpc.ts
+import {
+  SignedInAuthObject,
+  SignedOutAuthObject,
+  auth,
+} from '@clerk/nextjs/server'
+import { TRPCError, initTRPC } from '@trpc/server'
+import superjson from 'superjson'
+
+export type AuthContext = {
+  auth: SignedInAuthObject | SignedOutAuthObject
+}
+
+const createInnerTRPCContext = ({ auth }: AuthContext) => {
+  return {
+    auth,
+  }
+}
+
+export const createTRPCContext = () => {
+  return createInnerTRPCContext({ auth: auth() })
+}
+
+const t = initTRPC.context<typeof createTRPCContext>().create({
+  transformer: superjson,
+  errorFormatter({ shape }) {
+    return shape
+  },
+})
+
+const isAuthed = t.middleware(({ next, ctx }) => {
+  if (!ctx.auth.userId) {
+    throw new TRPCError({ code: 'UNAUTHORIZED' })
+  }
+
+  return next({
+    ctx: {
+      auth: ctx.auth,
+    },
+  })
+})
+
+export const router = t.router
+export const publicProcedure = t.procedure
+export const protectedProcedure = t.procedure.use(isAuthed)
+```
+
+19. create context for trpc and wrap your app in it
+
+```typescript
+'use client'
+
+import { trpc } from '@/server/client'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { httpBatchLink } from '@trpc/client'
+import React, { useState } from 'react'
+import superjson from 'superjson'
+
+export default function TrpcProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const [queryClient] = useState(() => new QueryClient({}))
+  const [trpcClient] = useState(() =>
+    trpc.createClient({
+      transformer: superjson,
+      links: [
+        httpBatchLink({
+          url: '/api/trpc',
+        }),
+      ],
+    })
+  )
+  return (
+    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    </trpc.Provider>
+  )
+}
+```

@@ -5,6 +5,7 @@ import { dark } from '@clerk/themes'
 import type { Metadata } from 'next'
 import { Inter as FontSans } from 'next/font/google'
 import './globals.css'
+import TrpcProvider from '@/components/contexts/trpc-provider'
 
 export const fontSans = FontSans({
   subsets: ['latin'],
@@ -27,23 +28,25 @@ export default function RootLayout({
         baseTheme: dark,
       }}
     >
-      <html lang="en">
-        <body
-          className={cn(
-            'min-h-screen bg-background font-sans antialiased',
-            fontSans.variable
-          )}
-        >
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
+      <TrpcProvider>
+        <html lang="en">
+          <body
+            className={cn(
+              'min-h-screen bg-background font-sans antialiased',
+              fontSans.variable
+            )}
           >
-            {children}
-          </ThemeProvider>
-        </body>
-      </html>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+            </ThemeProvider>
+          </body>
+        </html>
+      </TrpcProvider>
     </ClerkProvider>
   )
 }
