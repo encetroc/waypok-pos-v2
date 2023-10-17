@@ -15,36 +15,43 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { toast } from '@/components/ui/use-toast'
-import { PokemonSchema } from '@/schema/form'
+import { insertPokemonSchema } from '@/schema/drizzle'
 import { trpc } from '@/server/client'
 import { useRouter } from 'next/navigation'
 
 export function CreatePokemon() {
   const router = useRouter()
   const { mutate: createPokemon } = trpc.createPokemon.useMutation({
-    onSuccess(data) {
+    onSuccess() {
       toast({
         title: 'Success!',
         description: `Pokemon created`,
       })
+      form.reset()
       router.refresh()
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error creating pokemon',
+        description: error.message,
+      })
     },
   })
 
-  const form = useForm<z.infer<typeof PokemonSchema>>({
-    resolver: zodResolver(PokemonSchema),
+  const form = useForm<z.infer<typeof insertPokemonSchema>>({
+    resolver: zodResolver(insertPokemonSchema),
     defaultValues: {
       name: '',
     },
   })
 
-  function onSubmit(data: z.infer<typeof PokemonSchema>) {
+  function onSubmit(data: z.infer<typeof insertPokemonSchema>) {
     createPokemon(data)
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="name"
@@ -52,7 +59,7 @@ export function CreatePokemon() {
             <FormItem>
               <FormLabel>Pokemon name</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <Input type="text" placeholder="pokemon" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

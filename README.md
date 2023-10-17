@@ -2,7 +2,8 @@
 
 1. install pnpm
 2. `pnpm install`
-3. `pnpm run dev`
+3. `pnpm dev`
+4. for drizzle studio `pnpm db:studio`
 
 ### using
 
