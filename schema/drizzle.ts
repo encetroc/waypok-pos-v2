@@ -13,6 +13,8 @@ import {
 } from 'drizzle-orm/mysql-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 
+// pokemon table is used to testing
+
 export const pokemon = mysqlTable('pokemon', {
   id: int('id').primaryKey().autoincrement(),
   name: text('name').notNull(),
@@ -21,6 +23,8 @@ export const pokemon = mysqlTable('pokemon', {
 export const insertPokemonSchema = createInsertSchema(pokemon)
 
 export const selectPokemonSchema = createSelectSchema(pokemon)
+
+// relation with FK constrain are not allowed in planetscale, we use virtual relation instead with drizzle
 
 export const vehicle = mysqlTable('vehicle', {
   id: smallint('id').primaryKey().autoincrement().unique(),
