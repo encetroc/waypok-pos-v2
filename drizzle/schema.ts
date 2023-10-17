@@ -2,12 +2,12 @@ import { mysqlTable, mysqlSchema, AnyMySqlColumn, primaryKey, int, text } from "
 import { sql } from "drizzle-orm"
 
 
-export const usertest = mysqlTable("usertest", {
+export const pokemon = mysqlTable("pokemon", {
 	id: int("id").autoincrement().notNull(),
 	name: text("name"),
 },
 (table) => {
 	return {
-		usertestId: primaryKey(table.id),
+		pokemonId: primaryKey(table.id),
 	}
 });

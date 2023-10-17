@@ -267,3 +267,43 @@ export default function TrpcProvider({
   )
 }
 ```
+
+### Example
+
+1. create a db schema in `schema/drizzle.ts`
+
+```typescript
+export const pokemon = mysqlTable('pokemon', {
+  id: int('id').primaryKey().autoincrement(),
+  name: text('name'),
+})
+```
+
+2. can use [drizzle query](https://orm.drizzle.team/docs/rqb) directly in a server component, which is the default component in nextjs
+
+```typescript
+export default async function page() {
+  const pokemons = await db.query.pokemon.findMany()
+  return (
+    <ul>
+      {pokemons.map((pokemon) => (
+        <li key={pokemon.id}>{pokemon.name}</li>
+      ))}
+    </ul>
+  )
+}
+```
+
+3. for mutations, create a trpc route in `server/index.ts`
+
+```typescript
+  createPokemon: protectedProcedure
+    .input(z.object({ name: z.string() }))
+    .mutation(async ({input}) => {
+      const pokemon = db.insert(pokemonDrizzleSchema).values(input)
+      return pokemon
+    }),
+```
+
+4. create a form with text input and use `createPokemon` procedure
+5. create a `CreatePokemon` component that uses the `createPokemon` procedure to create a pokemon
