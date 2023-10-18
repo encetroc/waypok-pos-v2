@@ -1,4 +1,6 @@
+import { DataTable } from '@/components/common/data-table'
 import { CreateVehicle } from '@/components/other/create-vehicle'
+import { columns } from '@/components/other/vahicle-columns'
 import { db } from '@/db/client'
 import { auth } from '@clerk/nextjs'
 
@@ -9,6 +11,10 @@ export default async function page() {
     where: (vehicle, { eq }) => eq(vehicle.userId, userId),
     with: { stops: true },
   })
-  console.log(vehicles)
-  return <CreateVehicle />
+  return (
+    <div>
+      <CreateVehicle />
+      <DataTable data={vehicles} columns={columns} />
+    </div>
+  )
 }

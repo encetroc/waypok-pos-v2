@@ -41,6 +41,7 @@ export const vehicle = mysqlTable('vehicle', {
 export const insertVehicleSchema = createInsertSchema(vehicle).omit({
   userId: true,
 })
+export const selectVehicleSchema = createSelectSchema(vehicle)
 
 export const stop = mysqlTable('stop', {
   id: smallint('id').primaryKey().autoincrement().unique(),

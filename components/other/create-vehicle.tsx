@@ -80,7 +80,7 @@ export function CreateVehicle() {
       }}
       formSchema={formSchema}
     >
-      <AutoFormSubmit>Send now</AutoFormSubmit>
+      <AutoFormSubmit>create</AutoFormSubmit>
     </AutoForm>
   )
 }
