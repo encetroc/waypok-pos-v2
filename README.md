@@ -308,3 +308,7 @@ export default async function page() {
 
 4. create a form with text input and use `createPokemon` procedure
 5. create a `CreatePokemon` component that uses the `createPokemon` procedure to create a pokemon
+
+### rapid prototyping
+
+using [zod](https://zod.dev/) and [auto-form](https://github.com/vantezzen/auto-form) you can rapidly prototype forms, an explample is provided in `./components/other/example-auto-form.tsx`

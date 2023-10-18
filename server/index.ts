@@ -1,7 +1,10 @@
 import { db } from '@/db/client'
+import { addUserId } from '@/lib/utils'
 import {
   insertPokemonSchema,
+  insertVehicleSchema,
   pokemon as pokemonDrizzleSchema,
+  vehicle as vehicleDrizzleSchema,
 } from '@/schema/drizzle'
 import { protectedProcedure, publicProcedure, router } from '@/server/trpc'
 import { inferRouterOutputs } from '@trpc/server'
@@ -14,6 +17,14 @@ export const appRouter = router({
     .mutation(async ({ input }) => {
       const pokemon = db.insert(pokemonDrizzleSchema).values(input)
       return pokemon
+    }),
+  createVehicle: protectedProcedure
+    .input(insertVehicleSchema)
+    .mutation(({ input, ctx }) => {
+      const vehicle = db
+        .insert(vehicleDrizzleSchema)
+        .values(addUserId(ctx.auth.userId, input))
+      return vehicle
     }),
 })
 

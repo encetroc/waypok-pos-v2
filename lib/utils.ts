@@ -28,3 +28,7 @@ export function pickRandom<T>(array: T[]): T {
 export function randomNumber(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min) + min)
 }
+
+export function addUserId<T>(userId: string, input: T): T & { userId: string } {
+  return { ...input, userId }
+}

@@ -29,18 +29,17 @@ export const selectPokemonSchema = createSelectSchema(pokemon)
 export const vehicle = mysqlTable('vehicle', {
   id: smallint('id').primaryKey().autoincrement().unique(),
   userId: char('userId', { length: 32 }).notNull(),
-  transportationType: mysqlEnum('transportationType', ['grouped', 'individual'])
-    .notNull()
-    .default('individual'),
-  description: varchar('description', { length: 255 }),
-  reference: varchar('reference', { length: 50 }),
   vehicleType: mysqlEnum('vehicleType', ['van', 'truck', 'car']).notNull(),
   weight: mediumint('weight').notNull(),
   length: smallint('length').notNull(),
   width: smallint('width').notNull(),
   height: smallint('height').notNull(),
+  isGrouped: boolean('isGrouped').default(false),
   isPublished: boolean('isPublished').default(true),
   isAutoBook: boolean('isAutoBook').default(true),
+})
+export const insertVehicleSchema = createInsertSchema(vehicle).omit({
+  userId: true,
 })
 
 export const stop = mysqlTable('stop', {

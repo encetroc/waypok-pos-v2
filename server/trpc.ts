@@ -16,6 +16,7 @@ const createInnerTRPCContext = ({ auth }: AuthContext) => {
   }
 }
 
+// we add the `auth` object to the context of trpc
 export const createTRPCContext = () => {
   return createInnerTRPCContext({ auth: auth() })
 }
