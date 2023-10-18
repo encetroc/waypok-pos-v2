@@ -44,8 +44,8 @@ export const pokemon = mysqlTable("pokemon", {
 export const stop = mysqlTable("stop", {
 	id: smallint("id").autoincrement().notNull(),
 	address: varchar("address", { length: 255 }).notNull(),
-	arrivalDateTime: datetime("arrivalDateTime", { mode: 'string'}).default('2023-10-17 23:25:20'),
-	departureDateTime: datetime("departureDateTime", { mode: 'string'}).default('2023-10-17 23:25:20'),
+	arrivalDateTime: datetime("arrivalDateTime", { mode: 'string'}).default('2023-10-18 07:39:29'),
+	departureDateTime: datetime("departureDateTime", { mode: 'string'}).default('2023-10-18 07:39:29'),
 	startDateTime: datetime("startDateTime", { mode: 'string'}),
 	endDateTime: datetime("endDateTime", { mode: 'string'}),
 	vehicleId: smallint("vehicleId"),

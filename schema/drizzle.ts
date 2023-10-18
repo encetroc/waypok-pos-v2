@@ -50,7 +50,7 @@ export const stop = mysqlTable('stop', {
   departureDateTime: datetime('departureDateTime').default(new Date()),
   startDateTime: datetime('startDateTime'),
   endDateTime: datetime('endDateTime'),
-  vehicleId: smallint('vehicleId').references(() => vehicle.id),
+  vehicleId: smallint('vehicleId'),
 })
 
 export const vehicleInStop = relations(vehicle, ({ many }) => ({
@@ -78,8 +78,8 @@ export const parcel = mysqlTable('parcel', {
 
 export const operation = mysqlTable('operation', {
   id: smallint('id').primaryKey().autoincrement(),
-  parcelId: smallint('parcelId').references(() => parcel.id),
-  stopId: smallint('stopId').references(() => stop.id),
+  parcelId: smallint('parcelId'),
+  stopId: smallint('stopId'),
   operation: mysqlEnum('operation', ['load', 'unload']).notNull(),
 })
 
@@ -104,5 +104,3 @@ export const operationsInParcel = relations(operation, ({ one }) => ({
     references: [parcel.id],
   }),
 }))
-
-// 2023-10-18 11:30:30
