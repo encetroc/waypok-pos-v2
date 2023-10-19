@@ -12,6 +12,7 @@ import {
   varchar,
 } from 'drizzle-orm/mysql-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
+import { z } from 'zod'
 
 // pokemon table is used to testing
 
@@ -42,16 +43,18 @@ export const insertVehicleSchema = createInsertSchema(vehicle).omit({
   userId: true,
 })
 export const selectVehicleSchema = createSelectSchema(vehicle)
+export type Vehicle = z.infer<typeof selectVehicleSchema>
 
 export const stop = mysqlTable('stop', {
   id: smallint('id').primaryKey().autoincrement().unique(),
   address: varchar('address', { length: 255 }).notNull(),
-  arrivalDateTime: datetime('arrivalDateTime').default(new Date()),
-  departureDateTime: datetime('departureDateTime').default(new Date()),
-  startDateTime: datetime('startDateTime'),
-  endDateTime: datetime('endDateTime'),
-  vehicleId: smallint('vehicleId'),
+  arrivalDateTime: datetime('arrivalDateTime').notNull(),
+  departureDateTime: datetime('departureDateTime').notNull(),
+  vehicleId: smallint('vehicleId').notNull(),
 })
+export const insertStopSchema = createInsertSchema(stop)
+export const selectStopSchema = createSelectSchema(stop)
+export type Stop = z.infer<typeof selectStopSchema>
 
 export const vehicleInStop = relations(vehicle, ({ many }) => ({
   stops: many(stop),

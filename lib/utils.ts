@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from 'clsx'
+import { format } from 'date-fns'
 import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
@@ -31,4 +32,16 @@ export function randomNumber(min: number, max: number): number {
 
 export function addUserId<T>(userId: string, input: T): T & { userId: string } {
   return { ...input, userId }
+}
+
+export function removeTimeFromDate(date: Date): Date {
+  const year = date.getFullYear()
+  const month = date.getMonth()
+  const day = date.getDate()
+  return new Date(year, month, day)
+}
+
+export const formatDateTime = (date: Date | null): string => {
+  if (!date) return 'no date'
+  return format(date, 'dd/MM/yyyy HH:mm')
 }
