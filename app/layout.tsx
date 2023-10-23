@@ -1,5 +1,6 @@
 import { ThemeProvider } from '@/components/contexts/theme-provider'
 import TrpcProvider from '@/components/contexts/trpc-provider'
+import { Navbar } from '@/components/other/navbar'
 import { Toaster } from '@/components/ui/toaster'
 import { cn } from '@/lib/utils'
 import { ClerkProvider } from '@clerk/nextjs'
@@ -39,7 +40,12 @@ export default function layout({ children }: { children: React.ReactNode }) {
               enableSystem
               disableTransitionOnChange
             >
-              {children}
+              <div className="flex flex-col-reverse h-screen sm:flex-col">
+                <Navbar />
+                <main className="px-4 flex flex-col flex-1 overflow-y-scroll pb-6 sm:pt-6">
+                  {children}
+                </main>
+              </div>
             </ThemeProvider>
             <Toaster />
           </body>

@@ -18,6 +18,9 @@ module.exports = {
       },
     },
     extend: {
+      gridTemplateColumns: {
+        '35': 'repeat(35, minmax(0, 1fr))',
+      },
       fontFamily: {
         sans: ['var(--font-sans)', ...fontFamily.sans],
       },

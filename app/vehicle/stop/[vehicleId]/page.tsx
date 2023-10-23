@@ -12,6 +12,7 @@ type PageProps = {
 export default async function page({ params }: PageProps) {
   const stops = await db.query.stop.findMany({
     where: (stop, { eq }) => eq(stop.vehicleId, params.vehicleId),
+    orderBy: (stops, { asc }) => [asc(stops.arrivalDateTime)],
   })
   return (
     <div>

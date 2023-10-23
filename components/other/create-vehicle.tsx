@@ -17,7 +17,8 @@ const formSchema = z.object({
     .max(100000, {
       message: 'max 100000',
     })
-    .default(1000),
+    .default(1000)
+    .describe('weight in grams'),
   length: z.coerce
     .number({
       invalid_type_error: 'length must be a number.',
@@ -28,7 +29,8 @@ const formSchema = z.object({
     .max(5000, {
       message: 'max 5000',
     })
-    .default(100),
+    .default(100)
+    .describe('length in mm'),
   width: z.coerce
     .number({
       invalid_type_error: 'width must be a number.',
@@ -39,7 +41,8 @@ const formSchema = z.object({
     .max(5000, {
       message: 'max 5000',
     })
-    .default(100),
+    .default(100)
+    .describe('width in mm'),
   height: z.coerce
     .number({
       invalid_type_error: 'height must be a number.',
@@ -50,7 +53,8 @@ const formSchema = z.object({
     .max(5000, {
       message: 'max 5000',
     })
-    .default(100),
+    .default(100)
+    .describe('height in mm'),
   isGrouped: z.boolean().optional().default(false),
   isPublished: z.boolean().optional().default(true),
   isAutobook: z.boolean().optional().default(true),
