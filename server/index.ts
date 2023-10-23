@@ -1,9 +1,11 @@
 import { db } from '@/db/client'
 import { addUserId } from '@/lib/utils'
 import {
+  insertParcelSchema,
   insertPokemonSchema,
   insertStopSchema,
   insertVehicleSchema,
+  parcel as parcelDrizzleSchema,
   pokemon as pokemonDrizzleSchema,
   stop as stopDrizzleSchema,
   vehicle as vehicleDrizzleSchema,
@@ -33,6 +35,15 @@ export const appRouter = router({
     .mutation(({ input }) => {
       const stop = db.insert(stopDrizzleSchema).values(input)
       return stop
+    }),
+  createParcel: protectedProcedure
+    .input(insertParcelSchema)
+    .mutation(({ input, ctx }) => {
+      console.log('ctx', ctx.auth.userId)
+      const parcel = db
+        .insert(parcelDrizzleSchema)
+        .values(addUserId(ctx.auth.userId, input))
+      return parcel
     }),
 })
 

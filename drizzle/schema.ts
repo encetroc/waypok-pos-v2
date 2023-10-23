@@ -1,11 +1,11 @@
-import { mysqlTable, mysqlSchema, AnyMySqlColumn, primaryKey, smallint, mysqlEnum, mediumint, varchar, tinyint, int, text, unique, datetime, char } from "drizzle-orm/mysql-core"
+import { mysqlTable, mysqlSchema, AnyMySqlColumn, primaryKey, smallint, mysqlEnum, mediumint, tinyint, char, int, text, unique, varchar, datetime } from "drizzle-orm/mysql-core"
 import { sql } from "drizzle-orm"
 
 
 export const operation = mysqlTable("operation", {
 	id: smallint("id").autoincrement().notNull(),
-	parcelId: smallint("parcelId"),
-	stopId: smallint("stopId"),
+	parcelId: smallint("parcelId").notNull(),
+	stopId: smallint("stopId").notNull(),
 	operation: mysqlEnum("operation", ['load','unload']).notNull(),
 },
 (table) => {
@@ -20,10 +20,11 @@ export const parcel = mysqlTable("parcel", {
 	length: smallint("length").notNull(),
 	width: smallint("width").notNull(),
 	height: smallint("height").notNull(),
-	reference: varchar("reference", { length: 50 }),
 	type: mysqlEnum("type", ['pallet','box','envelope']).notNull(),
-	isPublished: tinyint("isPublished").default(1),
-	isAutoBook: tinyint("isAutoBook").default(1),
+	isPublished: tinyint("isPublished").default(1).notNull(),
+	isAutoBook: tinyint("isAutoBook").default(1).notNull(),
+	isGrouped: tinyint("isGrouped").default(0).notNull(),
+	userId: char("userId", { length: 32 }).notNull(),
 },
 (table) => {
 	return {
@@ -44,11 +45,9 @@ export const pokemon = mysqlTable("pokemon", {
 export const stop = mysqlTable("stop", {
 	id: smallint("id").autoincrement().notNull(),
 	address: varchar("address", { length: 255 }).notNull(),
-	arrivalDateTime: datetime("arrivalDateTime", { mode: 'string'}).default('2023-10-18 07:39:29'),
-	departureDateTime: datetime("departureDateTime", { mode: 'string'}).default('2023-10-18 07:39:29'),
-	startDateTime: datetime("startDateTime", { mode: 'string'}),
-	endDateTime: datetime("endDateTime", { mode: 'string'}),
-	vehicleId: smallint("vehicleId"),
+	arrivalDateTime: datetime("arrivalDateTime", { mode: 'string'}).notNull(),
+	departureDateTime: datetime("departureDateTime", { mode: 'string'}).notNull(),
+	vehicleId: smallint("vehicleId").notNull(),
 },
 (table) => {
 	return {
@@ -60,16 +59,14 @@ export const stop = mysqlTable("stop", {
 export const vehicle = mysqlTable("vehicle", {
 	id: smallint("id").autoincrement().notNull(),
 	userId: char("userId", { length: 32 }).notNull(),
-	transportationType: mysqlEnum("transportationType", ['grouped','individual']).default('individual').notNull(),
-	description: varchar("description", { length: 255 }),
-	reference: varchar("reference", { length: 50 }),
+	isGrouped: tinyint("isGrouped").default(0).notNull(),
 	vehicleType: mysqlEnum("vehicleType", ['van','truck','car']).notNull(),
 	weight: mediumint("weight").notNull(),
 	length: smallint("length").notNull(),
 	width: smallint("width").notNull(),
 	height: smallint("height").notNull(),
-	isPublished: tinyint("isPublished").default(1),
-	isAutoBook: tinyint("isAutoBook").default(1),
+	isPublished: tinyint("isPublished").default(1).notNull(),
+	isAutoBook: tinyint("isAutoBook").default(1).notNull(),
 },
 (table) => {
 	return {

@@ -7,6 +7,10 @@ const links = [
     href: '/vehicle',
     label: 'Vehicle',
   },
+  {
+    href: '/parcel',
+    label: 'Parcel',
+  },
 ]
 
 export const Navbar = () => {

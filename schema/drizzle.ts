@@ -35,9 +35,9 @@ export const vehicle = mysqlTable('vehicle', {
   length: smallint('length').notNull(),
   width: smallint('width').notNull(),
   height: smallint('height').notNull(),
-  isGrouped: boolean('isGrouped').default(false),
-  isPublished: boolean('isPublished').default(true),
-  isAutoBook: boolean('isAutoBook').default(true),
+  isGrouped: boolean('isGrouped').default(false).notNull(),
+  isPublished: boolean('isPublished').default(true).notNull(),
+  isAutoBook: boolean('isAutoBook').default(true).notNull(),
 })
 export const insertVehicleSchema = createInsertSchema(vehicle).omit({
   userId: true,
@@ -69,20 +69,26 @@ export const stopsInVehicle = relations(stop, ({ one }) => ({
 
 export const parcel = mysqlTable('parcel', {
   id: smallint('id').primaryKey().autoincrement(),
+  userId: char('userId', { length: 32 }).notNull(),
   weight: mediumint('weight').notNull(),
   length: smallint('length').notNull(),
   width: smallint('width').notNull(),
   height: smallint('height').notNull(),
-  reference: varchar('reference', { length: 50 }),
   type: mysqlEnum('type', ['pallet', 'box', 'envelope']).notNull(),
-  isPublished: boolean('isPublished').default(true),
-  isAutoBook: boolean('isAutoBook').default(true),
+  isGrouped: boolean('isGrouped').default(false).notNull(),
+  isPublished: boolean('isPublished').default(true).notNull(),
+  isAutoBook: boolean('isAutoBook').default(true).notNull(),
 })
+export const insertParcelSchema = createInsertSchema(parcel).omit({
+  userId: true,
+})
+export const selectParcelSchema = createSelectSchema(parcel)
+export type Parcel = z.infer<typeof selectParcelSchema>
 
 export const operation = mysqlTable('operation', {
   id: smallint('id').primaryKey().autoincrement(),
-  parcelId: smallint('parcelId'),
-  stopId: smallint('stopId'),
+  parcelId: smallint('parcelId').notNull(),
+  stopId: smallint('stopId').notNull(),
   operation: mysqlEnum('operation', ['load', 'unload']).notNull(),
 })
 

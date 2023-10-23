@@ -1,6 +1,7 @@
 import { DataTable } from '@/components/common/data-table'
 import { CreateStop } from '@/components/other/create-stop'
 import { columns } from '@/components/other/stop-columns'
+import { H1 } from '@/components/ui/typography'
 import { db } from '@/db/client'
 
 type PageProps = {
@@ -15,8 +16,11 @@ export default async function page({ params }: PageProps) {
     orderBy: (stops, { asc }) => [asc(stops.arrivalDateTime)],
   })
   return (
-    <div>
-      <CreateStop vehicleId={params.vehicleId} />
+    <div className="flex flex-col gap-10">
+      <div className="flex flex-col gap-4">
+        <H1>create stop</H1>
+        <CreateStop vehicleId={params.vehicleId} />
+      </div>
       <DataTable data={stops} columns={columns} />
     </div>
   )

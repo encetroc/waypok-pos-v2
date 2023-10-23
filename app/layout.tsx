@@ -42,7 +42,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
             >
               <div className="flex flex-col-reverse h-screen sm:flex-col">
                 <Navbar />
-                <main className="px-4 flex flex-col flex-1 overflow-y-scroll pb-6 sm:pt-6">
+                <main className="px-4 flex flex-col flex-1 overflow-y-scroll p-6">
                   {children}
                 </main>
               </div>
