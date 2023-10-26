@@ -20,6 +20,7 @@ module.exports = {
     extend: {
       gridTemplateColumns: {
         '35': 'repeat(35, minmax(0, 1fr))',
+        fluid: 'repeat(auto-fit, minmax(25rem, 1fr))',
       },
       fontFamily: {
         sans: ['var(--font-sans)', ...fontFamily.sans],

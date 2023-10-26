@@ -6,7 +6,7 @@ import * as z from 'zod'
 import { toast } from '../ui/use-toast'
 
 const formSchema = z.object({
-  vehicleType: z.enum(['van', 'truck', 'car']),
+  type: z.enum(['van', 'truck', 'car']),
   weight: z.coerce
     .number({
       invalid_type_error: 'weight must be a number.',

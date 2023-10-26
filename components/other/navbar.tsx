@@ -1,8 +1,13 @@
 import { UserButton } from '@clerk/nextjs'
 import Link from 'next/link'
 import { Button } from '../ui/button'
+import { ModeToggle } from './mode-toggle'
 
 const links = [
+  {
+    href: '/browse/vehicle',
+    label: 'Browse',
+  },
   {
     href: '/vehicle',
     label: 'Vehicle',
@@ -25,7 +30,10 @@ export const Navbar = () => {
           </li>
         ))}
       </ul>
-      <UserButton afterSignOutUrl="/" />
+      <div className="flex gap-2">
+        <ModeToggle />
+        <UserButton afterSignOutUrl="/" />
+      </div>
     </nav>
   )
 }

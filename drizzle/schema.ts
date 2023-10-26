@@ -60,7 +60,7 @@ export const vehicle = mysqlTable("vehicle", {
 	id: smallint("id").autoincrement().notNull(),
 	userId: char("userId", { length: 32 }).notNull(),
 	isGrouped: tinyint("isGrouped").default(0).notNull(),
-	vehicleType: mysqlEnum("vehicleType", ['van','truck','car']).notNull(),
+	type: mysqlEnum("type", ['van','truck','car']).notNull(),
 	weight: mediumint("weight").notNull(),
 	length: smallint("length").notNull(),
 	width: smallint("width").notNull(),

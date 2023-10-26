@@ -45,3 +45,26 @@ export const formatDateTime = (date: Date | null): string => {
   if (!date) return 'no date'
   return format(date, 'dd/MM/yyyy HH:mm')
 }
+
+type Entity = {
+  length: number
+  width: number
+  height: number
+  weight: number
+  [key: string]: any
+}
+
+export function volume(dimensions: Entity): number {
+  const { length, width, height } = dimensions
+  const volume = (length * width * height) / 1000000000
+  return volume
+}
+
+export function weight(dimensions: Entity): number {
+  const { weight } = dimensions
+  return weight / 1000
+}
+
+export function percentage(value: number, total: number): number {
+  return (value / total) * 100
+}

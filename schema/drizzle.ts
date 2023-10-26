@@ -30,7 +30,7 @@ export const selectPokemonSchema = createSelectSchema(pokemon)
 export const vehicle = mysqlTable('vehicle', {
   id: smallint('id').primaryKey().autoincrement().unique(),
   userId: char('userId', { length: 32 }).notNull(),
-  vehicleType: mysqlEnum('vehicleType', ['van', 'truck', 'car']).notNull(),
+  type: mysqlEnum('type', ['van', 'truck', 'car']).notNull(),
   weight: mediumint('weight').notNull(),
   length: smallint('length').notNull(),
   width: smallint('width').notNull(),

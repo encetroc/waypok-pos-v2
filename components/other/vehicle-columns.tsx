@@ -8,7 +8,7 @@ import { Button } from '../ui/button'
 
 export const columns: ColumnDef<Vehicle>[] = [
   {
-    accessorKey: 'vehicleType',
+    accessorKey: 'type',
     header: 'vehicle',
   },
   {

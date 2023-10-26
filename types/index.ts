@@ -39,7 +39,7 @@ type Vehicle = {
   transportationType: 'grouped' | 'individual'
   description: string | null
   Reference: string
-  vehicleType: 'van' | 'truck' | 'car'
+  type: 'van' | 'truck' | 'car'
   weight: number
   length: number
   width: number
