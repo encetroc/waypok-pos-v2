@@ -46,7 +46,10 @@ export const columns: ColumnDef<Vehicle>[] = [
           <Button title="delete vehicle" variant="ghost" size="icon">
             <Trash2 />
           </Button>
-          <Link title="view schedule" href={`/vehicle/stop/${row.original.id}`}>
+          <Link
+            title="view schedule"
+            href={`/vehicle/checkpoint/${row.original.id}`}
+          >
             <Button variant="ghost" size="icon">
               <CalendarDays />
             </Button>

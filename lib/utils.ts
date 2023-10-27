@@ -46,6 +46,11 @@ export const formatDateTime = (date: Date | null): string => {
   return format(date, 'dd/MM/yyyy HH:mm')
 }
 
+export const formatDate = (date: Date | null): string => {
+  if (!date) return 'no date'
+  return format(date, 'dd/MM/yyyy')
+}
+
 type Entity = {
   length: number
   width: number

@@ -55,6 +55,7 @@ const formSchema = z.object({
     })
     .default(100)
     .describe('height in mm'),
+  isDoorToDoor: z.boolean().optional().default(false),
   isGrouped: z.boolean().optional().default(false),
   isPublished: z.boolean().optional().default(true),
   isAutobook: z.boolean().optional().default(true),

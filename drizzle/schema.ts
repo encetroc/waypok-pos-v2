@@ -1,11 +1,40 @@
-import { mysqlTable, mysqlSchema, AnyMySqlColumn, primaryKey, smallint, mysqlEnum, mediumint, tinyint, char, int, text, unique, varchar, datetime } from "drizzle-orm/mysql-core"
+import { mysqlTable, mysqlSchema, AnyMySqlColumn, primaryKey, unique, smallint, varchar, mysqlEnum, datetime, mediumint, tinyint, char } from "drizzle-orm/mysql-core"
 import { sql } from "drizzle-orm"
 
+
+export const address = mysqlTable("address", {
+	id: smallint("id").autoincrement().notNull(),
+	country: varchar("country", { length: 100 }).notNull(),
+	city: varchar("city", { length: 100 }).notNull(),
+	street: varchar("street", { length: 100 }).notNull(),
+	number: varchar("number", { length: 10 }).notNull(),
+	checkpointId: smallint("checkpointId"),
+},
+(table) => {
+	return {
+		addressId: primaryKey(table.id),
+		addressIdUnique: unique("address_id_unique").on(table.id),
+	}
+});
+
+export const checkpoint = mysqlTable("checkpoint", {
+	id: smallint("id").autoincrement().notNull(),
+	type: mysqlEnum("type", ['exact','interval']).notNull(),
+	start: datetime("start", { mode: 'string'}).notNull(),
+	end: datetime("end", { mode: 'string'}).notNull(),
+	vehicleId: smallint("vehicleId").notNull(),
+},
+(table) => {
+	return {
+		checkpointId: primaryKey(table.id),
+		checkpointIdUnique: unique("checkpoint_id_unique").on(table.id),
+	}
+});
 
 export const operation = mysqlTable("operation", {
 	id: smallint("id").autoincrement().notNull(),
 	parcelId: smallint("parcelId").notNull(),
-	stopId: smallint("stopId").notNull(),
+	checkpointId: smallint("checkpointId").notNull(),
 	operation: mysqlEnum("operation", ['load','unload']).notNull(),
 },
 (table) => {
@@ -32,30 +61,6 @@ export const parcel = mysqlTable("parcel", {
 	}
 });
 
-export const pokemon = mysqlTable("pokemon", {
-	id: int("id").autoincrement().notNull(),
-	name: text("name").notNull(),
-},
-(table) => {
-	return {
-		pokemonId: primaryKey(table.id),
-	}
-});
-
-export const stop = mysqlTable("stop", {
-	id: smallint("id").autoincrement().notNull(),
-	address: varchar("address", { length: 255 }).notNull(),
-	arrivalDateTime: datetime("arrivalDateTime", { mode: 'string'}).notNull(),
-	departureDateTime: datetime("departureDateTime", { mode: 'string'}).notNull(),
-	vehicleId: smallint("vehicleId").notNull(),
-},
-(table) => {
-	return {
-		stopId: primaryKey(table.id),
-		stopIdUnique: unique("stop_id_unique").on(table.id),
-	}
-});
-
 export const vehicle = mysqlTable("vehicle", {
 	id: smallint("id").autoincrement().notNull(),
 	userId: char("userId", { length: 32 }).notNull(),
@@ -67,6 +72,7 @@ export const vehicle = mysqlTable("vehicle", {
 	height: smallint("height").notNull(),
 	isPublished: tinyint("isPublished").default(1).notNull(),
 	isAutoBook: tinyint("isAutoBook").default(1).notNull(),
+	isDoorToDoor: tinyint("isDoorToDoor").default(0).notNull(),
 },
 (table) => {
 	return {

@@ -1,28 +1,28 @@
 'use client'
 
 import { formatDateTime } from '@/lib/utils'
-import { type Stop } from '@/schema/drizzle'
+import { type Checkpoint } from '@/schema/drizzle'
 import { ColumnDef } from '@tanstack/react-table'
 import { Trash2 } from 'lucide-react'
 import { Button } from '../ui/button'
 
-export const columns: ColumnDef<Stop>[] = [
+export const columns: ColumnDef<Checkpoint>[] = [
   {
-    accessorKey: 'address',
-    header: 'address',
+    accessorKey: 'type',
+    header: 'type',
   },
   {
-    accessorKey: 'arrivalDateTime',
-    header: 'arrivalDateTime',
+    accessorKey: 'start',
+    header: 'start',
     cell: ({ row }) => {
-      return formatDateTime(row.original.arrivalDateTime)
+      return formatDateTime(row.original.start)
     },
   },
   {
-    accessorKey: 'departureDateTime',
-    header: 'departureDateTime',
+    accessorKey: 'end',
+    header: 'end',
     cell: ({ row }) => {
-      return formatDateTime(row.original.departureDateTime)
+      return formatDateTime(row.original.end)
     },
   },
   {

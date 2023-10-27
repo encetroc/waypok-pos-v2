@@ -7,10 +7,10 @@ export const getAllVehicles = async () => {
 export const getAllVehiclesWithNextNStops = async (n: number) => {
   return db.query.vehicle.findMany({
     with: {
-      stops: {
+      checkpoints: {
         limit: n,
-        where: (stop, { gt }) => gt(stop.arrivalDateTime, new Date()),
-        orderBy: (stop, { asc }) => [asc(stop.arrivalDateTime)],
+        where: (checkpoint, { gt }) => gt(checkpoint.start, new Date()),
+        orderBy: (checkpoint, { asc }) => [asc(checkpoint.start)],
       },
     },
   })

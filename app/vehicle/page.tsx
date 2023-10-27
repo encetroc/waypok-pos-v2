@@ -10,7 +10,6 @@ export default async function page() {
   if (!userId) return
   const vehicles = await db.query.vehicle.findMany({
     where: (vehicle, { eq }) => eq(vehicle.userId, userId),
-    with: { stops: true },
   })
   return (
     <div className="flex flex-col gap-10">

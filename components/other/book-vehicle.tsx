@@ -10,16 +10,16 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { formatDateTime, volume, weight } from '@/lib/utils'
-import { type Parcel, type Stop } from '@/schema/drizzle'
+import { type Checkpoint, type Parcel } from '@/schema/drizzle'
 import { useState } from 'react'
 import { Button } from '../ui/button'
 
 type BookVehicleProps = {
-  stops: Stop[]
+  checkpoints: Checkpoint[]
   parcels: Parcel[]
 }
 
-export const BookVehicle = ({ stops, parcels }: BookVehicleProps) => {
+export const BookVehicle = ({ checkpoints, parcels }: BookVehicleProps) => {
   const [parcelId, setParcelId] = useState<number | null>(null)
   const [bookState, setBookState] = useState<'load' | 'unload'>('load')
   const [loadStopId, setLoadStopId] = useState<number | null>(null)
@@ -71,22 +71,27 @@ export const BookVehicle = ({ stops, parcels }: BookVehicleProps) => {
             <Button onClick={handleCancel}>cancel</Button>
           </ul>
         ) : (
-          stops
-            .filter((stop) => {
-              const loadStop = stops.find((stop) => stop.id === loadStopId)
+          checkpoints
+            .filter((checkpoint) => {
+              const loadStop = checkpoints.find(
+                (checkpoint) => checkpoint.id === loadStopId
+              )
               if (!loadStop) return true
-              return stop.arrivalDateTime > loadStop.arrivalDateTime
+              return checkpoint.start > loadStop.start
             })
-            .map((stop) => {
-              if (stop.id === loadStopId || stop.id === unloadStopId)
+            .map((checkpoint) => {
+              if (
+                checkpoint.id === loadStopId ||
+                checkpoint.id === unloadStopId
+              )
                 return null
               return (
-                <li key={stop.id}>
-                  {`${stop.address}, in: ${formatDateTime(
-                    stop.arrivalDateTime
-                  )}, out: ${formatDateTime(stop.departureDateTime)}`}
+                <li key={checkpoint.id}>
+                  {`${'address'}, in: ${formatDateTime(
+                    checkpoint.start
+                  )}, out: ${formatDateTime(checkpoint.end)}`}
                   {parcelId && (
-                    <Button onClick={() => handleBook(stop.id)}>
+                    <Button onClick={() => handleBook(checkpoint.id)}>
                       {bookState === 'load' ? 'load' : 'unload'} parcel
                     </Button>
                   )}

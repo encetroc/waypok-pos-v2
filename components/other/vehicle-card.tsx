@@ -1,14 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 import { Button } from '@/components/ui/button'
 import { formatDateTime, volume, weight } from '@/lib/utils'
-import { type Stop, type Vehicle } from '@/schema/drizzle'
+import { type Checkpoint, type Vehicle } from '@/schema/drizzle'
 import { clerkClient } from '@clerk/nextjs'
 import Link from 'next/link'
 import { H3 } from '../ui/typography'
 
 type VehicleCardProps = {
   vehicle: Vehicle & {
-    stops: Stop[]
+    checkpoints: Checkpoint[]
   }
   showStops?: boolean
 }
@@ -37,14 +37,14 @@ export const VehicleCard = async ({
         <li>{`volume 0/${volume(vehicle)} mm3`}</li>
         <li>{`weight 0/${weight(vehicle)} kg`}</li>
         {showStops &&
-          (vehicle.stops.length ? (
-            vehicle.stops.map((stop) => (
-              <li key={stop.id}>
-                next stop: {stop.address} {formatDateTime(stop.arrivalDateTime)}
+          (vehicle.checkpoints.length ? (
+            vehicle.checkpoints.map((checkpoint) => (
+              <li key={checkpoint.id}>
+                next checkpoint: {formatDateTime(checkpoint.start)}
               </li>
             ))
           ) : (
-            <li>no stops scheduled</li>
+            <li>no checkpoints scheduled</li>
           ))}
       </ul>
       <Button className="self-end" variant="link">
