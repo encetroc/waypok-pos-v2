@@ -73,12 +73,12 @@ export const timeSlotsInVehicle = relations(vehicle, ({ many }) => ({
   timeSlots: many(timeSlot),
 }))
 
-/* export const vehicleInTimeSlot = relations(timeSlot, ({ one }) => ({
+export const vehicleInTimeSlot = relations(timeSlot, ({ one }) => ({
   vehicle: one(vehicle, {
     fields: [timeSlot.vehicleId],
     references: [vehicle.id],
   }),
-})) */
+}))
 
 export const operationsInParcel = relations(parcel, ({ many }) => ({
   operations: many(operation),
@@ -102,16 +102,13 @@ export const addressInOperation = relations(operation, ({ one }) => ({
   }),
 }))
 
-export const timeSlotAddressesIntimeSlot = relations(
-  timeSlot,
-  ({ many, one }) => ({
-    timeSlotAddresses: many(timeSlotAddress),
-    vehicle: one(vehicle, {
-      fields: [timeSlot.vehicleId],
-      references: [vehicle.id],
-    }),
-  })
-)
+export const addressesInTimeSlot = relations(timeSlot, ({ many }) => ({
+  timeSlotAddresses: many(timeSlotAddress),
+}))
+
+export const timeSlotsInAddress = relations(address, ({ many }) => ({
+  timeSlotAddresses: many(timeSlotAddress),
+}))
 
 export const timeSlotAddressRelations = relations(
   timeSlotAddress,
@@ -126,7 +123,3 @@ export const timeSlotAddressRelations = relations(
     }),
   })
 )
-
-export const timeSlotAddressesInAddress = relations(address, ({ many }) => ({
-  timeSlotAddresses: many(timeSlotAddress),
-}))

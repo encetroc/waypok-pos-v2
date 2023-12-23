@@ -5,16 +5,20 @@ import { ModeToggle } from './mode-toggle'
 
 const links = [
   {
-    href: '/browse/vehicle',
-    label: 'Browse',
+    href: '/book/vehicle',
+    label: 'book vehicle',
   },
   {
     href: '/vehicle',
-    label: 'Vehicle',
+    label: 'vehicle',
   },
   {
     href: '/parcel',
-    label: 'Parcel',
+    label: 'parcel',
+  },
+  {
+    href: '/address',
+    label: 'address',
   },
 ]
 
@@ -30,7 +34,7 @@ export const Navbar = () => {
           </li>
         ))}
       </ul>
-      <div className="flex gap-2">
+      <div className="flex gap-2 items-center">
         <ModeToggle />
         <UserButton afterSignOutUrl="/" />
       </div>

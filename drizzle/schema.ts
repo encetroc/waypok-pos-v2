@@ -1,14 +1,13 @@
-import { mysqlTable, mysqlSchema, AnyMySqlColumn, primaryKey, unique, smallint, varchar, mysqlEnum, datetime, mediumint, tinyint, char } from "drizzle-orm/mysql-core"
+import { mysqlTable, mysqlSchema, AnyMySqlColumn, primaryKey, unique, smallint, char, varchar, mysqlEnum, datetime } from "drizzle-orm/mysql-core"
 import { sql } from "drizzle-orm"
 
 
 export const address = mysqlTable("address", {
 	id: smallint("id").autoincrement().notNull(),
-	country: varchar("country", { length: 100 }).notNull(),
-	city: varchar("city", { length: 100 }).notNull(),
-	street: varchar("street", { length: 100 }).notNull(),
-	number: varchar("number", { length: 10 }).notNull(),
-	checkpointId: smallint("checkpointId"),
+	userId: char("userId", { length: 32 }).notNull(),
+	city: varchar("city", { length: 45 }).notNull(),
+	street: varchar("street", { length: 45 }),
+	number: varchar("number", { length: 45 }),
 },
 (table) => {
 	return {
@@ -17,62 +16,58 @@ export const address = mysqlTable("address", {
 	}
 });
 
-export const checkpoint = mysqlTable("checkpoint", {
+export const operation = mysqlTable("operation", {
 	id: smallint("id").autoincrement().notNull(),
-	type: mysqlEnum("type", ['exact','interval']).notNull(),
+	type: mysqlEnum("type", ['load','unload']).notNull(),
+	parcelId: smallint("parcelId").notNull(),
+	addressInstanceId: smallint("addressInstanceId").notNull(),
+},
+(table) => {
+	return {
+		operationId: primaryKey(table.id),
+		operationIdUnique: unique("operation_id_unique").on(table.id),
+	}
+});
+
+export const parcel = mysqlTable("parcel", {
+	id: smallint("id").autoincrement().notNull(),
+	userId: char("userId", { length: 32 }).notNull(),
+},
+(table) => {
+	return {
+		parcelId: primaryKey(table.id),
+		parcelIdUnique: unique("parcel_id_unique").on(table.id),
+	}
+});
+
+export const timeSlot = mysqlTable("timeSlot", {
+	id: smallint("id").autoincrement().notNull(),
 	start: datetime("start", { mode: 'string'}).notNull(),
 	end: datetime("end", { mode: 'string'}).notNull(),
 	vehicleId: smallint("vehicleId").notNull(),
 },
 (table) => {
 	return {
-		checkpointId: primaryKey(table.id),
-		checkpointIdUnique: unique("checkpoint_id_unique").on(table.id),
+		timeSlotId: primaryKey(table.id),
+		timeSlotIdUnique: unique("timeSlot_id_unique").on(table.id),
 	}
 });
 
-export const operation = mysqlTable("operation", {
+export const timeSlotAddress = mysqlTable("timeSlotAddress", {
 	id: smallint("id").autoincrement().notNull(),
-	parcelId: smallint("parcelId").notNull(),
-	checkpointId: smallint("checkpointId").notNull(),
-	operation: mysqlEnum("operation", ['load','unload']).notNull(),
+	timeSlotId: smallint("timeSlotId").notNull(),
+	addressId: smallint("addressId").notNull(),
 },
 (table) => {
 	return {
-		operationId: primaryKey(table.id),
-	}
-});
-
-export const parcel = mysqlTable("parcel", {
-	id: smallint("id").autoincrement().notNull(),
-	weight: mediumint("weight").notNull(),
-	length: smallint("length").notNull(),
-	width: smallint("width").notNull(),
-	height: smallint("height").notNull(),
-	type: mysqlEnum("type", ['pallet','box','envelope']).notNull(),
-	isPublished: tinyint("isPublished").default(1).notNull(),
-	isAutoBook: tinyint("isAutoBook").default(1).notNull(),
-	isGrouped: tinyint("isGrouped").default(0).notNull(),
-	userId: char("userId", { length: 32 }).notNull(),
-},
-(table) => {
-	return {
-		parcelId: primaryKey(table.id),
+		timeSlotAddressId: primaryKey(table.id),
+		timeSlotAddressIdUnique: unique("timeSlotAddress_id_unique").on(table.id),
 	}
 });
 
 export const vehicle = mysqlTable("vehicle", {
 	id: smallint("id").autoincrement().notNull(),
 	userId: char("userId", { length: 32 }).notNull(),
-	isGrouped: tinyint("isGrouped").default(0).notNull(),
-	type: mysqlEnum("type", ['van','truck','car']).notNull(),
-	weight: mediumint("weight").notNull(),
-	length: smallint("length").notNull(),
-	width: smallint("width").notNull(),
-	height: smallint("height").notNull(),
-	isPublished: tinyint("isPublished").default(1).notNull(),
-	isAutoBook: tinyint("isAutoBook").default(1).notNull(),
-	isDoorToDoor: tinyint("isDoorToDoor").default(0).notNull(),
 },
 (table) => {
 	return {

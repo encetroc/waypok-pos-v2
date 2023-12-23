@@ -73,3 +73,15 @@ export function weight(dimensions: Entity): number {
 export function percentage(value: number, total: number): number {
   return (value / total) * 100
 }
+
+interface Address {
+  city: string
+  street: string | null
+  number: string | null
+  [key: string]: any
+}
+
+export function formatAddress(address: Address): string {
+  const { city, street, number } = address
+  return `${street} ${number}, ${city}`
+}
