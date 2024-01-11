@@ -10,6 +10,8 @@ import {
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 import { z } from 'zod'
 
+export const operations = ['load', 'unload'] as const
+
 export const vehicle = mysqlTable('vehicle', {
   id: smallint('id').primaryKey().autoincrement().unique(),
   userId: char('userId', { length: 32 }).notNull(),
@@ -32,14 +34,12 @@ export type TimeSlot = z.infer<typeof selectTimeSlotSchema>
 
 export const address = mysqlTable('address', {
   id: smallint('id').primaryKey().autoincrement().unique(),
-  userId: char('userId', { length: 32 }).notNull(),
+  // userId: char('userId', { length: 32 }).notNull(),
   city: varchar('city', { length: 45 }).notNull(),
   street: varchar('street', { length: 45 }),
   number: varchar('number', { length: 45 }),
 })
-export const insertAddressSchema = createInsertSchema(address).omit({
-  userId: true,
-})
+export const insertAddressSchema = createInsertSchema(address)
 export const selectAddressSchema = createSelectSchema(address)
 export type Address = z.infer<typeof selectAddressSchema>
 
@@ -64,7 +64,7 @@ export type Parcel = z.infer<typeof selectParcelSchema>
 
 export const operation = mysqlTable('operation', {
   id: smallint('id').primaryKey().autoincrement().unique(),
-  type: mysqlEnum('type', ['load', 'unload']).notNull(),
+  type: mysqlEnum('type', operations).notNull(),
   parcelId: smallint('parcelId').notNull(),
   addressInstanceId: smallint('addressInstanceId').notNull(),
 })

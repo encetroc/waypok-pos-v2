@@ -6,9 +6,7 @@ import { auth } from '@clerk/nextjs'
 export default async function page() {
   const { userId } = auth()
   if (!userId) return
-  const addresses = await db.query.address.findMany({
-    where: (address, { eq }) => eq(address.userId, userId),
-  })
+  const addresses = await db.query.address.findMany()
   return (
     <div className="flex flex-col gap-4 items-start">
       <CreateAddress />

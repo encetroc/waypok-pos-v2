@@ -1,8 +1,22 @@
 'use client'
 
 // import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { formatAddress, formatDateTime } from '@/lib/utils'
-import { Address, TimeSlot, TimeSlotAddress, Vehicle } from '@/schema/drizzle'
+import {
+  Address,
+  Parcel,
+  TimeSlot,
+  TimeSlotAddress,
+  Vehicle,
+  operations,
+} from '@/schema/drizzle'
 import { RadioGroup, RadioGroupItem } from '@radix-ui/react-radio-group'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -24,15 +38,18 @@ type BookVehicleProps = {
       })[]
     })[]
   })[]
+  parcels: Parcel[]
 }
 
 const formSchema = z.object({
   vehicleId: z.coerce.number(),
   timeSlotIdLoad: z.coerce.number(),
-  addressIdload: z.coerce.string(),
+  addressId: z.coerce.string(),
+  operation: z.enum(operations),
+  parcelId: z.coerce.number(),
 })
 
-export const BookVehicle = ({ vehicles }: BookVehicleProps) => {
+export const BookVehicle = ({ vehicles, parcels }: BookVehicleProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
       vehicleId: vehicles[0].id,
@@ -42,8 +59,6 @@ export const BookVehicle = ({ vehicles }: BookVehicleProps) => {
   const timeSlotsLoad = vehicles.find(
     (vehicle) => vehicle.id == form.watch('vehicleId')
   )?.timeSlots
-
-  console.log(timeSlotsLoad)
 
   const addressesload = timeSlotsLoad
     ?.find((timeSlot) => timeSlot.id == form.watch('timeSlotIdLoad'))
@@ -55,7 +70,10 @@ export const BookVehicle = ({ vehicles }: BookVehicleProps) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col gap-3"
+      >
         <FormField
           control={form.control}
           name="vehicleId"
@@ -141,39 +159,93 @@ export const BookVehicle = ({ vehicles }: BookVehicleProps) => {
           />
         )}
         {!!addressesload?.length && (
-          <FormField
-            control={form.control}
-            name="addressIdload"
-            render={({ field }) => (
-              <FormItem className="space-y-3">
-                <FormLabel>select address to load parcel</FormLabel>
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={String(field.value)}
-                    className="flex gap-2 flex-wrap"
-                  >
-                    {addressesload.map((address) => (
-                      <FormItem
-                        key={address.id}
-                        className="flex items-center space-x-3 space-y-0"
-                      >
-                        <FormControl>
-                          <RadioGroupItem
-                            value={String(address.id)}
-                            className="flex flex-col gap-2 p-4 border rounded-md data-[state=checked]:bg-primary"
-                          >
-                            {formatAddress(address)}
-                          </RadioGroupItem>
-                        </FormControl>
-                      </FormItem>
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <>
+            <FormField
+              control={form.control}
+              name="addressId"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel>select an address</FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={String(field.value)}
+                      className="flex gap-2 flex-wrap"
+                    >
+                      {addressesload.map((address) => (
+                        <FormItem
+                          key={address.id}
+                          className="flex items-center space-x-3 space-y-0"
+                        >
+                          <FormControl>
+                            <RadioGroupItem
+                              value={String(address.id)}
+                              className="flex flex-col gap-2 p-4 border rounded-md data-[state=checked]:bg-primary"
+                            >
+                              {formatAddress(address)}
+                            </RadioGroupItem>
+                          </FormControl>
+                        </FormItem>
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="operation"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>load/unload</FormLabel>
+                  <Select onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select at least one address" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {operations.map((operation) => (
+                        <SelectItem key={operation} value={operation}>
+                          {operation}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="parcelId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>parcel</FormLabel>
+                  <Select onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select at parcel" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {parcels.map((parcel) => (
+                        <SelectItem
+                          key={parcel.id}
+                          value={parcel.id.toString()}
+                        >
+                          {`parcel ${parcel.id}`}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </>
         )}
         <Button type="submit">submit</Button>
       </form>

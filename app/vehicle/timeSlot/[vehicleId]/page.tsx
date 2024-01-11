@@ -23,9 +23,7 @@ export default async function page({ params }: PageProps) {
       },
     },
   })
-  const addresses = await db.query.address.findMany({
-    where: (address, { eq }) => eq(address.userId, userId),
-  })
+  const addresses = await db.query.address.findMany()
 
   return (
     <>

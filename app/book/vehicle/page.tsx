@@ -21,11 +21,15 @@ export default async function page() {
     },
   })
 
+  const parcels = await db.query.parcel.findMany({
+    where: (parcel, { eq }) => eq(parcel.userId, userId),
+  })
+
   console.log(vehicles)
 
   return (
     <div>
-      <BookVehicle vehicles={vehicles} />
+      <BookVehicle vehicles={vehicles} parcels={parcels} />
     </div>
   )
 }

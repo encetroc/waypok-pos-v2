@@ -1,10 +1,9 @@
-import { mysqlTable, mysqlSchema, AnyMySqlColumn, primaryKey, unique, smallint, char, varchar, mysqlEnum, datetime } from "drizzle-orm/mysql-core"
+import { mysqlTable, mysqlSchema, AnyMySqlColumn, primaryKey, unique, smallint, varchar, mysqlEnum, char, datetime } from "drizzle-orm/mysql-core"
 import { sql } from "drizzle-orm"
 
 
 export const address = mysqlTable("address", {
 	id: smallint("id").autoincrement().notNull(),
-	userId: char("userId", { length: 32 }).notNull(),
 	city: varchar("city", { length: 45 }).notNull(),
 	street: varchar("street", { length: 45 }),
 	number: varchar("number", { length: 45 }),

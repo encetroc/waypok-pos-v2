@@ -56,10 +56,8 @@ export const appRouter = router({
     }),
   createAddress: protectedProcedure
     .input(insertAddressSchema)
-    .mutation(({ input, ctx }) => {
-      const address = db
-        .insert(addressDrizzleSchema)
-        .values(addUserId(ctx.auth.userId, input))
+    .mutation(({ input }) => {
+      const address = db.insert(addressDrizzleSchema).values(input)
       return address
     }),
 })
