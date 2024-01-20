@@ -34,10 +34,9 @@ export type TimeSlot = z.infer<typeof selectTimeSlotSchema>
 
 export const address = mysqlTable('address', {
   id: smallint('id').primaryKey().autoincrement().unique(),
-  // userId: char('userId', { length: 32 }).notNull(),
+  country: varchar('country', { length: 45 }).notNull(),
   city: varchar('city', { length: 45 }).notNull(),
-  street: varchar('street', { length: 45 }),
-  number: varchar('number', { length: 45 }),
+  district: varchar('district', { length: 45 }).notNull(),
 })
 export const insertAddressSchema = createInsertSchema(address)
 export const selectAddressSchema = createSelectSchema(address)
@@ -66,19 +65,20 @@ export const operation = mysqlTable('operation', {
   id: smallint('id').primaryKey().autoincrement().unique(),
   type: mysqlEnum('type', operations).notNull(),
   parcelId: smallint('parcelId').notNull(),
-  addressInstanceId: smallint('addressInstanceId').notNull(),
+  addressId: smallint('addressId').notNull(),
+  timeSlotId: smallint('timeSlotId').notNull(),
 })
 
-export const timeSlotsInVehicle = relations(vehicle, ({ many }) => ({
-  timeSlots: many(timeSlot),
+export const operationsInTimeSlot = relations(timeSlot, ({ many }) => ({
+  operations: many(operation),
 }))
 
-/* export const vehicleInTimeSlot = relations(timeSlot, ({ one }) => ({
-  vehicle: one(vehicle, {
-    fields: [timeSlot.vehicleId],
-    references: [vehicle.id],
+export const TimeSlotInOperation = relations(operation, ({ one }) => ({
+  timeSlot: one(timeSlot, {
+    fields: [operation.timeSlotId],
+    references: [timeSlot.id],
   }),
-})) */
+}))
 
 export const operationsInParcel = relations(parcel, ({ many }) => ({
   operations: many(operation),
@@ -97,21 +97,25 @@ export const operationsInAddress = relations(address, ({ many }) => ({
 
 export const addressInOperation = relations(operation, ({ one }) => ({
   address: one(address, {
-    fields: [operation.addressInstanceId],
+    fields: [operation.addressId],
     references: [address.id],
   }),
 }))
 
-export const timeSlotAddressesIntimeSlot = relations(
-  timeSlot,
-  ({ many, one }) => ({
-    timeSlotAddresses: many(timeSlotAddress),
-    vehicle: one(vehicle, {
-      fields: [timeSlot.vehicleId],
-      references: [vehicle.id],
-    }),
-  })
-)
+export const timeSlotsInVehicle = relations(vehicle, ({ many }) => ({
+  timeSlots: many(timeSlot),
+}))
+
+export const vehicleInTimeSlot = relations(timeSlot, ({ one }) => ({
+  vehicle: one(vehicle, {
+    fields: [timeSlot.vehicleId],
+    references: [vehicle.id],
+  }),
+}))
+
+export const timeSlotAddressesIntimeSlot = relations(timeSlot, ({ many }) => ({
+  timeSlotAddresses: many(timeSlotAddress),
+}))
 
 export const timeSlotAddressRelations = relations(
   timeSlotAddress,

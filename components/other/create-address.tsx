@@ -18,9 +18,9 @@ import { Input } from '../ui/input'
 import { toast } from '../ui/use-toast'
 
 const formSchema = z.object({
+  country: z.string(),
   city: z.string(),
-  street: z.string().optional(),
-  number: z.string().optional(),
+  district: z.string(),
 })
 
 export const CreateAddress = () => {
@@ -44,9 +44,9 @@ export const CreateAddress = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      city: '',
-      street: '',
-      number: '',
+      country: 'Morocco',
+      city: 'Rabat',
+      district: 'Vila Mariana',
     },
   })
 
@@ -62,6 +62,19 @@ export const CreateAddress = () => {
       >
         <FormField
           control={form.control}
+          name="country"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>country</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name="city"
           render={({ field }) => (
             <FormItem>
@@ -75,23 +88,10 @@ export const CreateAddress = () => {
         />
         <FormField
           control={form.control}
-          name="street"
+          name="district"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>street</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="number"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>number</FormLabel>
+              <FormLabel>district</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
